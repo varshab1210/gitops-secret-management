@@ -10,10 +10,8 @@ spec:
     description: If true run a server-side dryrun.
     name: DRYRUN
     type: string
-  resources:
-    inputs:
+  workspaces:
     - name: source
-      type: git
   steps:
   - image: quay.io/redhat-developer/k8s-kubectl
     name: run-kubectl

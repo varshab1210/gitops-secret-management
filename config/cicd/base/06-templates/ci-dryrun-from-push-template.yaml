@@ -31,15 +31,15 @@ spec:
         value: $(tt.params.io.openshift.build.commit.id)
       pipelineRef:
         name: ci-dryrun-from-push-pipeline
-      resources:
-      - name: source-repo
-        resourceSpec:
-          params:
-          - name: revision
-            value: $(tt.params.io.openshift.build.commit.id)
-          - name: url
-            value: $(tt.params.gitrepositoryurl)
-          type: git
+      workspaces:
+      - name: source
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 200Mi
       serviceAccountName: pipeline
     status: {}
 status: {}

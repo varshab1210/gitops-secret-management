@@ -5,6 +5,8 @@ metadata:
   name: ci-dryrun-from-push-pipeline
   namespace: cicd
 spec:
+  workspaces:
+    - name: source
   finally:
   - name: set-final-status
     params:
@@ -28,10 +30,19 @@ spec:
     type: string
   - name: GIT_REPO
     type: string
-  resources:
-  - name: source-repo
-    type: git
   tasks:
+  - name: clone-source-repo
+    taskRef:
+      name: git-clone
+      kind: ClusterTask
+    params:
+      - name: url
+        value: $(params.GIT_REPO)
+      - name: revision
+        value: $(params.COMMIT_SHA)
+    workspaces:
+      - name: output
+        workspace: source
   - name: set-pending-status
     params:
     - name: REPO
@@ -51,12 +62,11 @@ spec:
     params:
     - name: DRYRUN
       value: "true"
-    resources:
-      inputs:
+    workspaces:
       - name: source
-        resource: source-repo
+        workspace: source
     runAfter:
-    - set-pending-status
+    - clone-source-repo
     taskRef:
       kind: Task
       name: deploy-from-source-task
