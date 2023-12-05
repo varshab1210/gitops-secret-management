@@ -3,5 +3,3 @@ resources:
 - 200-service.yaml
 - 300-route.yaml
 - secret-provider-class.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
